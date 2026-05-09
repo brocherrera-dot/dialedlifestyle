@@ -277,24 +277,24 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 .btn-sm { padding: 7px 13px; font-size: 13px; }
 
 /* ===== Cards ===== */
-.card {
-  background: var(--surface-card);
-  border: 1px solid rgba(20, 11, 0, 0.096);
-  border-radius: var(--radius-cards);
-  padding: var(--spacing-20);
-}
-.card-white {
-  background: var(--color-dark-charcoal);
-  border: 1px solid rgba(20, 11, 0, 0.128);
-  border-radius: var(--radius-cards);
-  padding: var(--spacing-20);
-}
+/* Frosted-glass treatment: a translucent surface above the page,
+   blurred for a subtle depth, with a 1px hairline + a 1px inset
+   highlight on the top edge so the card reads as a real pane. */
+.card,
+.card-white,
 .card-elevated {
-  background: var(--surface-card);
-  border: 1px solid rgba(20, 11, 0, 0.128);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(20, 11, 0, 0.06);
   border-radius: var(--radius-cards);
-  padding: var(--spacing-32) var(--spacing-32);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 1px 2px rgba(20, 11, 0, 0.04);
 }
+.card           { padding: var(--spacing-20); }
+.card-white     { padding: var(--spacing-20); }
+.card-elevated  { padding: var(--spacing-28); }
 .card-accent {
   background: var(--color-amber-glow);
   color: var(--color-deep-onyx);
@@ -483,18 +483,24 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 }
 
 /* ===== Section ===== */
-.section { padding: var(--spacing-72) 0; }
+.section { padding: var(--spacing-52) 0; }
 .section-tight { padding: var(--spacing-32) 0; }
 .section-light {
-  background: var(--color-dawn-linen);
+  /* Surface-dawn-linen is the literal cream brand color, unchanged
+     across themes — using it here instead of --color-dawn-linen so
+     the section stays light when we flip the role tokens. */
+  background: var(--surface-dawn-linen);
   color: var(--color-deep-onyx);
 }
 .section-light h1, .section-light h2, .section-light h3, .section-light h4 { color: var(--color-deep-onyx); }
 .section-light .muted { color: var(--color-fossil-grey); }
 .section-light .card-white {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
   border: 1px solid rgba(20, 11, 0, 0.08);
   color: var(--color-deep-onyx);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.7) inset;
 }
 .section-light .card-white h4 { color: var(--color-deep-onyx); }
 .section-light .badge {
@@ -533,10 +539,15 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 
 /* ===== Feature card ===== */
 .feature-card {
-  background: var(--surface-card);
-  border: 1px solid rgba(20, 11, 0, 0.128);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(20, 11, 0, 0.06);
   border-radius: var(--radius-cards);
   padding: var(--spacing-24);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 1px 2px rgba(20, 11, 0, 0.04);
 }
 .feature-card .num {
   font-family: var(--font-mono);
@@ -549,6 +560,36 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 }
 .feature-card h4 { margin-bottom: var(--spacing-8); }
 .feature-card p { color: var(--color-pale-ash); font-size: var(--text-body); line-height: 1.5; }
+
+/* ===== Results section (Broc Herrera 12 weeks in) ===== */
+.results-card { padding: var(--spacing-32); }
+.results-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--spacing-32);
+  align-items: stretch;
+}
+.results-headline { font-size: 35px; line-height: 1.1; letter-spacing: -0.006em; }
+.results-portrait {
+  position: relative;
+  border-radius: var(--radius-cards);
+  overflow: hidden;
+  background: var(--color-dark-charcoal);
+  /* Match the height of the left text+stats+testimonial column */
+  align-self: stretch;
+  min-height: 420px;
+}
+.results-portrait img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(1.05) contrast(1.04);
+}
+@media (max-width: 860px) {
+  .results-card { padding: var(--spacing-20); }
+  .results-grid { grid-template-columns: 1fr; gap: var(--spacing-20); }
+  .results-portrait { min-height: 320px; aspect-ratio: 4/3; }
+}
 
 /* ===== App shell ===== */
 .app {
@@ -648,10 +689,15 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 
 /* ===== Stat ===== */
 .stat {
-  background: var(--surface-card);
-  border: 1px solid rgba(20, 11, 0, 0.096);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(20, 11, 0, 0.06);
   border-radius: var(--radius-cards);
   padding: var(--spacing-20);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.85) inset,
+    0 1px 2px rgba(20, 11, 0, 0.04);
 }
 .stat-label {
   font-family: var(--font-mono);
