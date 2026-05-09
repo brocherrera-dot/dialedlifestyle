@@ -9,14 +9,14 @@
      have been flipped so deep-onyx is now the dark text color and
      abyss / dawn-linen become surfaces. The --surface-* tokens at
      the bottom still hold the literal brand colors. */
-  --color-deep-onyx:    #140b00;   /* primary text, used to read "color" in dark mode → still dark, perfect text on cream */
-  --color-dawn-linen:   #1a1209;   /* secondary text — was cream, now near-black so existing color: var(--color-dawn-linen) becomes legible on cream */
+  --color-deep-onyx:    #140b00;   /* primary text, used to read "color" in dark mode → still dark, perfect text on white */
+  --color-dawn-linen:   #1a1209;   /* secondary text — was cream, now near-black so existing color: var(--color-dawn-linen) becomes legible on white */
   --color-amber-glow:   #ffb442;   /* unchanged — brand accent stays vivid in both modes */
-  --color-abyss:        #fbf3e0;   /* page background — was deepest dark, now lightest cream */
-  --color-fossil-grey:  #c9bda6;   /* hairline border / muted divider on cream */
-  --color-desert-stone: #a89c83;   /* secondary surface tone */
+  --color-abyss:        #ffffff;   /* page background — pure white */
+  --color-fossil-grey:  #e3ddd0;   /* hairline border / muted divider on white */
+  --color-desert-stone: #b8ad97;   /* secondary surface tone */
   --color-pale-ash:     #6b6053;   /* muted body text, mid-warm grey */
-  --color-dark-charcoal:#f3eadb;   /* subtle background shift / hairline */
+  --color-dark-charcoal:#f6f6f4;   /* subtle background shift / hairline (placeholder bg for images) */
   --color-warm-mist:    #2a1f10;   /* high-contrast text */
   --gradient-amber-glow: linear-gradient(315deg, rgba(255, 180, 66, 0), rgb(255, 180, 66) 49%, rgb(255, 241, 224));
 
@@ -117,10 +117,7 @@ html, body {
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(60% 50% at 50% 0%, rgba(255, 180, 66, 0.06), transparent 70%),
-    radial-gradient(40% 40% at 90% 80%, rgba(255, 180, 66, 0.04), transparent 70%),
-    var(--color-abyss);
+  background: var(--color-abyss);
 }
 
 a { color: var(--color-amber-glow); text-decoration: none; transition: opacity .15s ease; }
@@ -170,7 +167,7 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 248, 236, 0.82);
+  background: rgba(255, 255, 255, 0.78);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border-bottom: 1px solid rgba(20, 11, 0, 0.08);
@@ -486,11 +483,11 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 .section { padding: var(--spacing-52) 0; }
 .section-tight { padding: var(--spacing-32) 0; }
 .section-light {
-  /* Surface-dawn-linen is the literal cream brand color, unchanged
-     across themes — using it here instead of --color-dawn-linen so
-     the section stays light when we flip the role tokens. */
-  background: var(--surface-dawn-linen);
+  /* Pure white block for visual rhythm against the page bg */
+  background: #ffffff;
   color: var(--color-deep-onyx);
+  border-top: 1px solid rgba(20, 11, 0, 0.05);
+  border-bottom: 1px solid rgba(20, 11, 0, 0.05);
 }
 .section-light h1, .section-light h2, .section-light h3, .section-light h4 { color: var(--color-deep-onyx); }
 .section-light .muted { color: var(--color-fossil-grey); }
@@ -600,7 +597,7 @@ body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 .sidebar {
   border-right: 1px solid rgba(20, 11, 0, 0.096);
   padding: var(--spacing-24) var(--spacing-12);
-  background: rgba(255, 248, 236, 0.55);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   position: sticky;
