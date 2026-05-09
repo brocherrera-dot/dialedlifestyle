@@ -247,9 +247,12 @@
   }
 
   // ---------- Photographic placeholders ----------
-  // loremflickr returns Flickr CC photos matching the supplied keyword set,
-  // pinned by `lock=N` so each user gets the same photo on every load.
-  // picsum.photos is the automatic onerror fallback if loremflickr is down.
+  // Photos resolve via /uploads/<key>:
+  //   1. Server returns the user's uploaded file if present
+  //   2. Otherwise the server 302-redirects to a themed loremflickr image
+  //   3. Client-side <img onerror> falls through: loremflickr → picsum → hide
+  // This means the image manager (images.html) can override every photo on
+  // the site without touching markup.
   function flickr(keywords, w, h, lock) {
     const k = encodeURIComponent(keywords);
     return `https://loremflickr.com/${w}/${h}/${k}/all?lock=${lock}`;
@@ -257,13 +260,21 @@
   function picsum(seed, w, h) {
     return `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`;
   }
-  // Returns an HTML string for a photographic <img> with double fallback.
-  // Usage: photoImg({ keywords:'sunrise', w:1600, h:900, lock:1, alt:'...' })
-  function photoImg({ keywords, w, h, lock, alt = '', seed }) {
-    const fb = picsum(seed || keywords, w, h);
-    const primary = flickr(keywords, w, h, lock);
-    return `<img src="${primary}" alt="${alt}" loading="lazy"
-      onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='${fb}';}else{this.style.display='none';}" />`;
+  function uploadUrl(key) { return `/uploads/${encodeURIComponent(key)}`; }
+
+  function photoImg({ key, keywords, w, h, lock, alt = '', seed }) {
+    const flickrFb = flickr(keywords, w, h, lock);
+    const picsumFb = picsum(seed || keywords, w, h);
+    // Prefer the server route when one is available (relative path works on
+    // the same origin), and fall back to flickr/picsum on the CDN if served
+    // from a static host.
+    const primary = key ? uploadUrl(key) : flickrFb;
+    return `<img src="${primary}" alt="${escapeHtml(alt)}" loading="lazy"
+      onerror="
+        var f=this.dataset.fb||'';
+        if(f===''){this.dataset.fb='1';this.src='${flickrFb}';}
+        else if(f==='1'){this.dataset.fb='2';this.src='${picsumFb}';}
+        else{this.style.display='none';}" />`;
   }
 
   // Curated photo catalog — single source of truth so we can re-tune art
@@ -301,7 +312,7 @@
   function photoFor(key, overrides = {}) {
     const cfg = PHOTOS[key];
     if (!cfg) return '';
-    return photoImg({ ...cfg, ...overrides });
+    return photoImg({ key, ...cfg, ...overrides });
   }
 
   // ---------- Public API ----------

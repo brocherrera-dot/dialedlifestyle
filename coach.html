@@ -45,6 +45,10 @@
       <a data-route="markers">◗ Blood markers</a>
       <a data-route="detox">◴ Detox builder</a>
     </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Site</div>
+      <a href="images.html">◆ Image manager</a>
+    </div>
   </aside>
 
   <main class="main" id="main">
@@ -264,7 +268,7 @@ function recentPaymentsTable(limit) {
         <td>${c ? escapeHtml(c.name) : '—'}</td>
         <td>${fmtDate(p.date)}</td>
         <td>${fmtMoney(p.amount)}</td>
-        <td><span class="badge ${p.status === 'paid' ? 'badge-cream' : ''}" style="${p.status==='paid'?'background:#e7d8b9':''}">${p.status}</span></td>
+        <td><span class="badge ${p.status === 'paid' ? 'badge-accent' : ''}">${p.status}</span></td>
       </tr>`;
     }).join('')}</tbody>
   </table>`;
@@ -452,7 +456,7 @@ function paymentsTable() {
         <td>${escapeHtml(p.memo)}</td>
         <td>${escapeHtml(p.method)}</td>
         <td>${fmtMoney(p.amount)}</td>
-        <td><span class="badge" style="${p.status==='paid'?'background:#e7d8b9;color:#3a2a18':''}">${p.status}</span></td>
+        <td><span class="badge ${p.status==='paid'?'badge-accent':''}">${p.status}</span></td>
       </tr>`;
     }).join('')}</tbody>
   </table>`;

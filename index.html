@@ -35,8 +35,8 @@
 
 <section class="hero">
   <div class="hero-bg" aria-hidden="true">
-    <img src="https://loremflickr.com/1920/1080/sunrise%2Chorizon%2Cnature/all?lock=1001"
-         onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/sunrise/1920/1080';}else{this.style.display='none';}"
+    <img src="/uploads/heroBg"
+         onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/1920/1080/sunrise%2Chorizon%2Cnature/all?lock=1001';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/sunrise/1920/1080';} else {this.style.display='none';}"
          alt="" />
   </div>
   <div class="hero-inner">
@@ -55,8 +55,8 @@
       </div>
     </div>
     <div class="hero-visual">
-      <img src="https://loremflickr.com/900/900/sunrise%2Crunning%2Csilhouette/all?lock=1002"
-           onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/runner/900/900';}else{this.style.display='none';}"
+      <img src="/uploads/heroVisual"
+           onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/900/900/sunrise%2Crunning%2Csilhouette/all?lock=1002';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/runner/900/900';} else {this.style.display='none';}"
            alt="Athlete moving into the sunrise" />
       <div class="visual-caption">Sunrise · 06:14 · NYC</div>
     </div>
@@ -67,18 +67,18 @@
   <div class="container">
     <div class="showcase">
       <div class="photo-frame">
-        <img class="photo" src="https://loremflickr.com/800/1000/sunrise%2Cgolden%2Csky/all?lock=1101"
-             onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/golden/800/1000';}else{this.style.display='none';}"
+        <img class="photo" src="/uploads/showcaseSun"
+             onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/800/1000/sunrise%2Cgolden%2Csky/all?lock=1101';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/golden/800/1000';} else {this.style.display='none';}"
              alt="Golden sunrise sky" />
       </div>
       <div class="photo-frame">
-        <img class="photo" src="https://loremflickr.com/800/1000/wholefoods%2Cplate%2Cwholesome/all?lock=1102"
-             onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/plate/800/1000';}else{this.style.display='none';}"
+        <img class="photo" src="/uploads/showcasePlate"
+             onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/800/1000/wholefoods%2Cplate%2Cwholesome/all?lock=1102';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/plate/800/1000';} else {this.style.display='none';}"
              alt="Whole-food plate" />
       </div>
       <div class="photo-frame">
-        <img class="photo" src="https://loremflickr.com/800/1000/fitness%2Cathlete%2Ctorso/all?lock=1103"
-             onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/athlete/800/1000';}else{this.style.display='none';}"
+        <img class="photo" src="/uploads/showcaseBody"
+             onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/800/1000/fitness%2Cathlete%2Ctorso/all?lock=1103';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/athlete/800/1000';} else {this.style.display='none';}"
              alt="Aesthetic physique" />
       </div>
     </div>
@@ -117,7 +117,7 @@
   </div>
 </section>
 
-<section class="section" id="tools" style="background: var(--color-cream-canvas)">
+<section class="section section-light" id="tools">
   <div class="container">
     <div class="stack-16" style="max-width:720px;margin-bottom:48px;">
       <span class="section-eyebrow">Inside the platform</span>
@@ -187,8 +187,8 @@
         </div>
         <div class="stack-16">
           <div class="portrait">
-            <img src="https://loremflickr.com/600/750/man%2Cfitness%2Cathletic%2Cportrait/all?lock=1003"
-                 onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='https://picsum.photos/seed/broc-portrait/600/750';}else{this.style.display='none';}"
+            <img src="/uploads/testimonial"
+                 onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/600/750/man%2Cfitness%2Cathletic%2Cportrait/all?lock=1003';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/broc-portrait/600/750';} else {this.style.display='none';}"
                  alt="Broc Herrera" />
           </div>
           <div class="card-white">
@@ -207,7 +207,7 @@
   </div>
 </section>
 
-<section class="section" id="faq" style="background: var(--color-cream-canvas)">
+<section class="section section-light" id="faq">
   <div class="container" style="max-width: 880px">
     <div class="stack-16" style="margin-bottom: 32px">
       <span class="section-eyebrow">Common questions</span>
