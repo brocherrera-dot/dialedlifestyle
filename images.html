@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Image manager — Dialed Lifestyle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"></span>
+      <span>Dialed Lifestyle</span>
+      <span class="badge badge-cream" style="margin-left:8px">Image manager</span>
+    </a>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="coach.html">Coach console ↗</a>
+      <a class="btn btn-link btn-sm" href="client.html">Client portal ↗</a>
+      <a class="btn btn-ghost btn-sm" href="index.html">View landing</a>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 32px; padding-bottom: 80px;">
+  <div class="page-header">
+    <div>
+      <span class="mono" style="color:var(--color-amber-glow)">Dialed · Asset library</span>
+      <h2 style="margin-top:6px">Replace any photo on the site.</h2>
+      <div class="sub">Upload your own image for any slot — hero, recipes, articles, dashboard banners. Drop a file or click. Click "Revert" to drop back to the placeholder.</div>
+    </div>
+    <div class="row-wrap">
+      <button class="btn btn-ghost btn-sm" id="reset-all">Revert all</button>
+    </div>
+  </div>
+
+  <div id="status" style="display:none; margin-bottom:16px"></div>
+
+  <section class="stack-32">
+    <div>
+      <h4 style="margin-bottom:12px">Landing page</h4>
+      <div class="image-grid" data-group="landing"></div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:12px">Dashboards</h4>
+      <div class="image-grid" data-group="dashboards"></div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:12px">Recipes</h4>
+      <div class="image-grid" data-group="recipes"></div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:12px">Articles</h4>
+      <div class="image-grid" data-group="articles"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+const GROUPS = {
+  landing:    ['heroBg', 'heroVisual', 'testimonial', 'showcaseSun', 'showcasePlate', 'showcaseBody'],
+  dashboards: ['coachBanner', 'clientBanner', 'programBanner'],
+  recipes:    ['r1', 'r2', 'r3', 'r4', 'r5', 'r6'],
+  articles:   ['a1', 'a2', 'a3', 'a4', 'a5', 'a6'],
+};
+
+const LABELS = {
+  heroBg: 'Hero background', heroVisual: 'Hero visual (right)', testimonial: 'Testimonial portrait',
+  showcaseSun: 'Showcase · sunrise', showcasePlate: 'Showcase · plate', showcaseBody: 'Showcase · physique',
+  coachBanner: 'Coach overview banner', clientBanner: 'Client home banner', programBanner: 'Client plan banner',
+  r1: 'Steak & eggs',     r2: 'Wild salmon plate',     r3: 'Liver & onion bowl',
+  r4: 'Bone broth',       r5: 'Yogurt & berries',      r6: 'Sardines on sourdough',
+  a1: 'Sunrise / circadian', a2: 'Primal plate',        a3: 'Mid-day sun',
+  a4: 'Clean water',         a5: 'Sleep hygiene',       a6: 'Detox capacity',
+};
+
+let SLOTS = {}; // server-side photo defaults keyed by slot
+let UPLOADS = {}; // user uploads keyed by slot
+
+function setStatus(msg, kind = 'ok') {
+  const el = $('#status');
+  if (!msg) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.className = '';
+  el.style.padding = '12px 16px';
+  el.style.borderRadius = '6px';
+  el.style.fontSize = '14px';
+  if (kind === 'error') {
+    el.style.background = 'rgba(255, 80, 80, 0.08)';
+    el.style.border = '1px solid rgba(255, 80, 80, 0.4)';
+    el.style.color = '#ffb5b5';
+  } else {
+    el.style.background = 'rgba(255, 180, 66, 0.08)';
+    el.style.border = '1px solid rgba(255, 180, 66, 0.35)';
+    el.style.color = 'var(--color-amber-glow)';
+  }
+  el.textContent = msg;
+  if (kind === 'ok') setTimeout(() => { el.style.display = 'none'; }, 2400);
+}
+
+function slotCardHtml(key) {
+  const upload = UPLOADS[key];
+  const has = !!upload;
+  // Cache-bust on upload timestamp so the preview refreshes
+  const v = has ? `?v=${encodeURIComponent(upload.uploadedAt)}` : '';
+  return `
+    <div class="image-slot ${has ? 'has-upload' : ''}" data-key="${key}">
+      <div class="preview"><img src="/uploads/${key}${v}" alt="${LABELS[key] || key}" /></div>
+      <div>
+        <div style="font-weight:500; font-size:14px; margin-bottom:2px">${LABELS[key] || key}</div>
+        <div class="key">${key} · ${has ? 'custom upload' : 'default placeholder'}</div>
+      </div>
+      <div class="dropzone" data-drop="${key}">
+        ${has ? 'Drop a new file or click to replace' : 'Drop image or click to upload'}
+      </div>
+      <input type="file" accept="image/*" data-input="${key}" />
+      <div class="row-wrap">
+        ${has ? `<button class="btn btn-ghost btn-sm" data-revert="${key}">Revert</button>` : ''}
+        <span class="muted" style="font-size:12px">${
+          has
+            ? `${(upload.size/1024).toFixed(0)} KB · ${upload.original || upload.file}`
+            : `Default: ${(SLOTS[key]?.keywords || '').replace(/,/g, ' · ')}`
+        }</span>
+      </div>
+    </div>
+  `;
+}
+
+function render() {
+  for (const [group, keys] of Object.entries(GROUPS)) {
+    const root = document.querySelector(`[data-group="${group}"]`);
+    if (!root) continue;
+    root.innerHTML = keys.map(slotCardHtml).join('');
+  }
+  wireEvents();
+}
+
+function wireEvents() {
+  $$('[data-input]').forEach(input => {
+    input.addEventListener('change', async (e) => {
+      const key = input.dataset.input;
+      const file = e.target.files?.[0];
+      if (file) await upload(key, file);
+      input.value = '';
+    });
+  });
+  $$('[data-drop]').forEach(zone => {
+    const key = zone.dataset.drop;
+    zone.addEventListener('click', () => {
+      const input = document.querySelector(`[data-input="${key}"]`);
+      if (input) input.click();
+    });
+    ['dragenter','dragover'].forEach(ev => zone.addEventListener(ev, e => {
+      e.preventDefault(); e.stopPropagation(); zone.classList.add('dragover');
+    }));
+    ['dragleave','drop'].forEach(ev => zone.addEventListener(ev, e => {
+      e.preventDefault(); e.stopPropagation(); zone.classList.remove('dragover');
+    }));
+    zone.addEventListener('drop', async (e) => {
+      const file = e.dataTransfer?.files?.[0];
+      if (file) await upload(key, file);
+    });
+  });
+  $$('[data-revert]').forEach(btn => {
+    btn.addEventListener('click', () => revert(btn.dataset.revert));
+  });
+}
+
+function readAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(fr.result);
+    fr.onerror = reject;
+    fr.readAsDataURL(file);
+  });
+}
+
+async function upload(key, file) {
+  if (!file.type.startsWith('image/')) {
+    setStatus('Only image files are accepted.', 'error');
+    return;
+  }
+  if (file.size > 18 * 1024 * 1024) {
+    setStatus('Image is larger than 18 MB. Compress and try again.', 'error');
+    return;
+  }
+  setStatus(`Uploading ${file.name}…`);
+  try {
+    const dataUrl = await readAsDataURL(file);
+    const res = await fetch(`/api/uploads/${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dataUrl, filename: file.name }),
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(`HTTP ${res.status}: ${txt}`);
+    }
+    const data = await res.json();
+    UPLOADS[key] = data;
+    setStatus(`Replaced ${LABELS[key] || key}.`);
+    render();
+  } catch (e) {
+    setStatus(`Upload failed: ${e.message || e}. Are you running the local server (npm start)?`, 'error');
+  }
+}
+
+async function revert(key) {
+  if (!confirm(`Revert "${LABELS[key] || key}" back to the placeholder?`)) return;
+  try {
+    const res = await fetch(`/api/uploads/${encodeURIComponent(key)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    delete UPLOADS[key];
+    setStatus(`Reverted ${LABELS[key] || key}.`);
+    render();
+  } catch (e) {
+    setStatus(`Revert failed: ${e.message || e}`, 'error');
+  }
+}
+
+async function load() {
+  try {
+    const res = await fetch('/api/uploads');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    SLOTS = j.slots || {};
+    UPLOADS = j.uploads || {};
+  } catch (e) {
+    setStatus('Could not reach the API. The image manager only works when the local server is running (npm start).', 'error');
+  }
+  render();
+}
+
+$('#reset-all').addEventListener('click', async () => {
+  if (!confirm('Revert ALL custom uploads back to placeholders?')) return;
+  setStatus('Reverting all…');
+  const keys = Object.keys(UPLOADS);
+  for (const k of keys) {
+    await fetch(`/api/uploads/${encodeURIComponent(k)}`, { method: 'DELETE' }).catch(() => {});
+  }
+  await load();
+  setStatus('All slots reverted.');
+});
+
+load();
+</script>
+</body>
+</html>
