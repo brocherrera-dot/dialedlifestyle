@@ -1,33 +1,52 @@
 :root {
-  /* Colors — Abetterlou "Midnight desert oasis" */
-  --color-deep-onyx: #140b00;
-  --color-dawn-linen: #fff1e0;
-  --color-amber-glow: #ffb442;
-  --gradient-amber-glow: linear-gradient(315deg, rgba(255, 180, 66, 0), rgb(255, 180, 66) 49%, rgb(255, 241, 224));
-  --color-abyss: #0b0600;
-  --color-fossil-grey: #43392d;
-  --color-desert-stone: #4f4538;
-  --color-pale-ash: #85796c;
-  --color-dark-charcoal: #181109;
-  --color-warm-mist: #f1f1f1;
+  /* ====================================================================
+     Tokens — Abetterlou "Midnight desert oasis"
+     Strict superset of variables.css + theme.css.
+     ==================================================================== */
 
-  /* Type */
-  --font-pp: 'Inter', 'PP Neue Montreal', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Colors */
+  --color-deep-onyx:    #140b00;
+  --color-dawn-linen:   #fff1e0;
+  --color-amber-glow:   #ffb442;
+  --color-abyss:        #0b0600;
+  --color-fossil-grey:  #43392d;
+  --color-desert-stone: #4f4538;
+  --color-pale-ash:     #85796c;
+  --color-dark-charcoal:#181109;
+  --color-warm-mist:    #f1f1f1;
+  --gradient-amber-glow: linear-gradient(315deg, rgba(255, 180, 66, 0), rgb(255, 180, 66) 49%, rgb(255, 241, 224));
+
+  /* Surfaces (level 0–4) */
+  --surface-abyss:        #0b0600;
+  --surface-deep-onyx:    #140b00;
+  --surface-desert-stone: #4f4538;
+  --surface-amber-glow:   #ffb442;
+  --surface-dawn-linen:   #fff1e0;
+
+  /* Typography — families */
+  --font-pp-neue-montreal: 'PP Neue Montreal', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, 'JetBrains Mono', 'Fira Code', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --text-caption: 10px;
-  --text-body: 14px;
-  --text-subheading: 22px;
-  --text-heading: 35px;
-  --text-heading-lg: 55px;
-  --text-display: 81px;
+  /* Typography — weights */
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+
+  /* Typography — scale (size / leading / tracking) */
+  --text-caption:        10px; --leading-caption:      1.5;  --tracking-caption:      0.1px;
+  --text-body:           14px; --leading-body:         1.5;
+  --text-subheading:     22px; --leading-subheading:   1.43; --tracking-subheading:  -0.002px;
+  --text-heading:        35px; --leading-heading:      1.2;  --tracking-heading:     -0.006px;
+  --text-heading-lg:     55px; --leading-heading-lg:   1.1;  --tracking-heading-lg:  -0.008px;
+  --text-display:        81px; --leading-display:      0.8;  --tracking-display:     -0.014px;
 
   /* Spacing */
-  --spacing-4: 4px;
-  --spacing-6: 6px;
-  --spacing-8: 8px;
+  --spacing-4:   4px;
+  --spacing-6:   6px;
+  --spacing-8:   8px;
+  --spacing-9:   9px;
   --spacing-10: 10px;
   --spacing-12: 12px;
+  --spacing-13: 13px;
   --spacing-14: 14px;
   --spacing-16: 16px;
   --spacing-20: 20px;
@@ -36,28 +55,35 @@
   --spacing-32: 32px;
   --spacing-52: 52px;
   --spacing-72: 72px;
+  --spacing-152: 152px;
 
+  /* Layout */
   --section-gap: 52px;
   --card-padding: 12px;
   --element-gap: 12px;
 
-  --radius-cards: 6px;
-  --radius-inputs: 1296px;
-  --radius-buttons: 1296px;
-  --radius-navigation: 1162.8px;
+  /* Border radius */
+  --radius-md:      6px;
+  --radius-full:    1162.8px;
+  --radius-full-2:  1296px;
+  /* Named radii */
+  --radius-cards:      var(--radius-md);
+  --radius-inputs:     var(--radius-full-2);
+  --radius-buttons:    var(--radius-full-2);
+  --radius-navigation: var(--radius-full);
 
-  /* Back-compat aliases — older inline styles reference these names. */
-  --color-night-sky: var(--color-dawn-linen);
-  --color-charcoal-grey: var(--color-dawn-linen);
-  --color-faded-stone: var(--color-pale-ash);
-  --color-cream-canvas: var(--color-deep-onyx);
-  --color-warm-mist: rgba(255, 241, 224, 0.06);
-  --color-parchment-white: var(--color-abyss);
-  --color-off-white: var(--color-deep-onyx);
-  --color-slate-border: rgba(255, 241, 224, 0.20);
-  --font-financier-display: var(--font-pp);
-  --font-ftbase: var(--font-pp);
-  --font-fragment-mono: var(--font-mono);
+  /* ----- Back-compat aliases for older inline styles ----- */
+  --color-night-sky:        var(--color-dawn-linen);
+  --color-charcoal-grey:    var(--color-dawn-linen);
+  --color-faded-stone:      var(--color-pale-ash);
+  --color-cream-canvas:     var(--color-deep-onyx);
+  --color-parchment-white:  var(--color-abyss);
+  --color-off-white:        var(--color-deep-onyx);
+  --color-slate-border:     rgba(255, 241, 224, 0.20);
+  --font-pp:                var(--font-pp-neue-montreal);
+  --font-financier-display: var(--font-pp-neue-montreal);
+  --font-ftbase:            var(--font-pp-neue-montreal);
+  --font-fragment-mono:     var(--font-mono);
   --shadow-lg: 0 0 0 1px rgba(255, 241, 224, 0.06);
   --shadow-xl: 0 0 0 1px rgba(255, 241, 224, 0.06);
 }
@@ -67,9 +93,9 @@
 html, body {
   background: var(--color-abyss);
   color: var(--color-dawn-linen);
-  font-family: var(--font-pp);
+  font-family: var(--font-pp-neue-montreal);
   font-size: var(--text-body);
-  line-height: 1.5;
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -90,18 +116,27 @@ button { font-family: inherit; cursor: pointer; }
 ::selection { background: var(--color-amber-glow); color: var(--color-deep-onyx); }
 
 h1, h2, h3, h4, h5 {
-  font-family: var(--font-pp);
-  font-weight: 500;
+  font-family: var(--font-pp-neue-montreal);
+  font-weight: var(--font-weight-medium);
   color: var(--color-dawn-linen);
 }
-h1 { font-size: var(--text-display);     line-height: 0.85; letter-spacing: -0.014em; }
-h2 { font-size: var(--text-heading-lg);  line-height: 1.05; letter-spacing: -0.008em; }
-h3 { font-size: var(--text-heading);     line-height: 1.10; letter-spacing: -0.006em; }
-h4 { font-size: var(--text-subheading);  line-height: 1.20; letter-spacing: -0.002em; }
+h1 { font-size: var(--text-display);    line-height: var(--leading-display);    letter-spacing: var(--tracking-display); }
+h2 { font-size: var(--text-heading-lg); line-height: var(--leading-heading-lg); letter-spacing: var(--tracking-heading-lg); }
+h3 { font-size: var(--text-heading);    line-height: var(--leading-heading);    letter-spacing: var(--tracking-heading); }
+h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); letter-spacing: var(--tracking-subheading); }
+
+/* ----- Typography utility classes (named steps) ----- */
+.text-display    { font-family: var(--font-pp-neue-montreal); font-weight: var(--font-weight-medium);  font-size: var(--text-display);    line-height: var(--leading-display);    letter-spacing: var(--tracking-display); }
+.text-heading-lg { font-family: var(--font-pp-neue-montreal); font-weight: var(--font-weight-medium);  font-size: var(--text-heading-lg); line-height: var(--leading-heading-lg); letter-spacing: var(--tracking-heading-lg); }
+.text-heading    { font-family: var(--font-pp-neue-montreal); font-weight: var(--font-weight-medium);  font-size: var(--text-heading);    line-height: var(--leading-heading);    letter-spacing: var(--tracking-heading); }
+.text-subheading { font-family: var(--font-pp-neue-montreal); font-weight: var(--font-weight-medium);  font-size: var(--text-subheading); line-height: var(--leading-subheading); letter-spacing: var(--tracking-subheading); }
+.text-body       { font-family: var(--font-pp-neue-montreal); font-weight: var(--font-weight-regular); font-size: var(--text-body);       line-height: var(--leading-body); }
+.text-caption    { font-family: var(--font-mono);             font-weight: var(--font-weight-medium);  font-size: var(--text-caption);    line-height: var(--leading-caption);    letter-spacing: 0.1em; text-transform: uppercase; }
 
 .mono {
   font-family: var(--font-mono);
   font-size: var(--text-caption);
+  line-height: var(--leading-caption);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-pale-ash);
@@ -571,11 +606,11 @@ h4 { font-size: var(--text-subheading);  line-height: 1.20; letter-spacing: -0.0
   margin-bottom: var(--spacing-8);
 }
 .stat-value {
-  font-family: var(--font-pp);
-  font-weight: 500;
-  font-size: 35px;
-  line-height: 1;
-  letter-spacing: -0.006em;
+  font-family: var(--font-pp-neue-montreal);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
   color: var(--color-dawn-linen);
 }
 .stat-delta { color: var(--color-amber-glow); font-size: var(--text-body); margin-top: 6px; }
