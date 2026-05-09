@@ -98,7 +98,7 @@ function setRoute(name) {
   routes[route]($('#main'));
 }
 
-$$('.sidebar a').forEach(a => {
+$$('.sidebar a[data-route]').forEach(a => {
   a.addEventListener('click', (e) => { e.preventDefault(); setRoute(a.dataset.route); });
 });
 $('#reset-data').addEventListener('click', async () => {

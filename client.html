@@ -91,7 +91,7 @@ function setRoute(name) {
   $('#main').innerHTML = '';
   routes[r]($('#main'));
 }
-$$('.sidebar a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); setRoute(a.dataset.route); }));
+$$('.sidebar a[data-route]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); setRoute(a.dataset.route); }));
 window.addEventListener('hashchange', () => setRoute(location.hash.replace('#','')));
 setRoute(location.hash.replace('#','') || 'home');
 
