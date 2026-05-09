@@ -465,6 +465,19 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
 }
 .section-light .btn-ghost:hover { background: rgba(20, 11, 0, 0.06); }
 .section-light .mono { color: var(--color-fossil-grey); }
+.section-light .list-clean li {
+  color: var(--color-deep-onyx);
+  border-bottom-color: rgba(20, 11, 0, 0.10);
+}
+.section-light p, .section-light li, .section-light .lead {
+  color: var(--color-deep-onyx);
+}
+.section-light .muted, .section-light p.muted {
+  color: var(--color-fossil-grey);
+}
+.section-light .section-eyebrow { color: var(--color-fossil-grey); }
+.section-light a { color: var(--color-fossil-grey); }
+.section-light a:hover { color: var(--color-amber-glow); }
 
 .section-eyebrow {
   font-family: var(--font-mono);
