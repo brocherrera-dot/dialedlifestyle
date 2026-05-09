@@ -56,7 +56,8 @@ const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 const { fmtMoney, fmtDate, fmtTime, fmtDateLong, initials, escapeHtml,
         solarTimes, circadianSchedule, buildDetoxProtocol,
-        FOOD_CATALOG, DEFAULT_SERVINGS, buildGroceryList } = window.DialedUI;
+        FOOD_CATALOG, DEFAULT_SERVINGS, buildGroceryList,
+        photoFor, photoImg } = window.DialedUI;
 
 let state = window.DialedData.loadData();
 function persist() { window.DialedData.saveData(state); }
@@ -116,6 +117,13 @@ function renderHome(root) {
 
   root.innerHTML = `
     ${header(`Welcome back, ${me.name.split(' ')[0]}.`, 'Here is your day, dialed in.')}
+    <div class="dash-banner">
+      ${photoFor('clientBanner')}
+      <div class="banner-text">
+        <h3>Outside by ${fmtClock(sched.wake)}.</h3>
+        <div class="banner-sub">5–10 min direct light. No sunglasses. The day starts now.</div>
+      </div>
+    </div>
 
     <div class="grid-2" style="margin-bottom:24px">
       <div class="card-elevated" style="padding:32px">
@@ -217,6 +225,13 @@ function renderProgram(root) {
   const proto = buildDetoxProtocol(me.detoxProtocol);
   root.innerHTML = `
     ${header('My plan', `${me.program} · ${me.stage}`)}
+    <div class="dash-banner">
+      ${photoFor('programBanner')}
+      <div class="banner-text">
+        <h3>Phase 2 — drive total T past 1,000.</h3>
+        <div class="banner-sub">Mid-day sun + organ rotation + sleep, anchored.</div>
+      </div>
+    </div>
     <div class="card-elevated" style="padding:32px;margin-bottom:24px">
       <div class="grid-2" style="gap:32px;align-items:center">
         <div>
@@ -378,7 +393,7 @@ function markerCard(m) {
 function renderCircadian(root) {
   let dateStr = new Date().toISOString().slice(0, 10);
   root.innerHTML = `
-    ${header('Today\\'s sun', `Plan tuned to ${me.city}.`)}
+    ${header("Today's sun", `Plan tuned to ${me.city}.`)}
     <div class="row-wrap" style="margin-bottom:24px">
       <input class="input" id="date" type="date" value="${dateStr}" style="max-width:200px"/>
     </div>
@@ -592,7 +607,7 @@ function renderRecipes(root) {
     const list = state.recipes.filter(r => tag === 'all' || r.tags.includes(tag));
     $('#recipe-grid').innerHTML = list.map(r => `
       <div class="card-white" style="cursor:pointer" data-recipe="${r.id}">
-        <div class="thumb"></div>
+        <div class="thumb">${photoFor(r.id)}</div>
         <div class="row-wrap" style="margin-bottom:8px;gap:6px">${r.tags.map(t => `<span class="badge">${escapeHtml(t)}</span>`).join('')}</div>
         <h4 style="margin-bottom:6px">${escapeHtml(r.name)}</h4>
         <div class="muted" style="font-size:14px">${r.time} min · ${r.ingredients.length} ingredients</div>
@@ -614,7 +629,7 @@ function openRecipe(id) {
     ${header(r.name, `${r.time} min · ${r.tags.join(' · ')}`, '<button class="btn btn-ghost btn-sm" id="back">← Back</button>')}
     <div class="grid-2">
       <div class="card-elevated" style="padding:32px">
-        <div class="thumb" style="aspect-ratio:16/10"></div>
+        <div class="thumb" style="aspect-ratio:16/10">${photoFor(r.id, { w: 1280, h: 800 })}</div>
         <h4 style="margin:24px 0 12px">Method</h4>
         <p>${escapeHtml(r.method)}</p>
       </div>
@@ -651,10 +666,13 @@ function renderLibrary(root) {
   const renderList = (tag) => {
     const list = state.articles.filter(a => tag === 'all' || a.tag === tag);
     $('#lib').innerHTML = list.map(a => `
-      <div class="card-white" style="cursor:pointer" data-article="${a.id}">
-        <span class="badge">${escapeHtml(a.tag)}</span>
-        <h4 style="margin:8px 0">${escapeHtml(a.title)}</h4>
-        <p class="muted">${escapeHtml(a.excerpt)}</p>
+      <div class="card-white" style="cursor:pointer; display:grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: stretch; padding: 0; overflow: hidden" data-article="${a.id}">
+        <div class="thumb" style="margin:0; aspect-ratio:auto; min-height:180px; border-radius:0">${photoFor(a.id, { w: 480, h: 360 })}</div>
+        <div style="padding: 20px 24px 20px 0;">
+          <span class="badge">${escapeHtml(a.tag)}</span>
+          <h4 style="margin:8px 0">${escapeHtml(a.title)}</h4>
+          <p class="muted">${escapeHtml(a.excerpt)}</p>
+        </div>
       </div>
     `).join('');
     $$('[data-article]').forEach(c => c.addEventListener('click', () => openArticle(c.dataset.article)));
@@ -671,7 +689,8 @@ function openArticle(id) {
   const a = state.articles.find(x => x.id === id);
   $('#main').innerHTML = `
     ${header(a.title, a.tag, '<button class="btn btn-ghost btn-sm" id="back">← Back</button>')}
-    <div class="card-elevated" style="padding:48px;max-width:760px">
+    <div class="card-elevated" style="padding:48px;max-width:820px">
+      <div class="article-hero">${photoFor(a.id)}</div>
       <span class="badge badge-accent">${escapeHtml(a.tag)}</span>
       <h2 style="margin:16px 0 12px;font-family:var(--font-financier-display);font-weight:400;font-size:45px;line-height:1.11">${escapeHtml(a.title)}</h2>
       <p class="muted" style="font-size:18px;margin-bottom:24px">${escapeHtml(a.excerpt)}</p>

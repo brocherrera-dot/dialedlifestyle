@@ -59,7 +59,8 @@ const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => Array.from(el.querySelectorAll(sel));
 const { fmtMoney, fmtDate, fmtTime, fmtDateLong, initials, escapeHtml,
         solarTimes, circadianSchedule, buildDetoxProtocol, DETOX_PROTOCOLS,
-        FOOD_CATALOG, DEFAULT_SERVINGS, buildGroceryList, activateTabs } = window.DialedUI;
+        FOOD_CATALOG, DEFAULT_SERVINGS, buildGroceryList, activateTabs,
+        photoFor, photoImg } = window.DialedUI;
 
 let state = window.DialedData.loadData();
 
@@ -133,6 +134,13 @@ function renderOverview(root) {
 
   root.innerHTML = `
     ${pageHeader('Welcome back, Caden.', 'Your practice in one glance.')}
+    <div class="dash-banner">
+      ${photoFor('coachBanner')}
+      <div class="banner-text">
+        <h3>${state.clients.filter(c => c.stage.startsWith('Active')).length} active. ${upcoming.length ? upcoming.length : 0} calls this week.</h3>
+        <div class="banner-sub">Caden, here's what the week looks like.</div>
+      </div>
+    </div>
     <div class="grid-4" style="margin-bottom:24px">
       <div class="stat"><div class="stat-label">Active clients</div><div class="stat-value">${state.clients.filter(c => c.stage.startsWith('Active')).length}</div><div class="stat-delta">Total roster: ${state.clients.length}</div></div>
       <div class="stat"><div class="stat-label">MRR (recurring)</div><div class="stat-value">${fmtMoney(mrr)}</div><div class="stat-delta">From monthly retainers</div></div>
@@ -458,7 +466,7 @@ function renderDiet(root) {
   let servings = { ...DEFAULT_SERVINGS };
 
   root.innerHTML = `
-    ${pageHeader('Diet & grocery calculator', 'Build a primal whole-foods week against the client\\'s budget.')}
+    ${pageHeader('Diet & grocery calculator', "Build a primal whole-foods week against the client's budget.")}
     <div class="row-wrap" style="margin-bottom:24px">
       <select class="select" id="client-select" style="max-width:280px">
         ${state.clients.map(c => `<option value="${c.id}" ${c.id===client.id?'selected':''}>${escapeHtml(c.name)} — ${fmtMoney(c.foodBudget)}/wk</option>`).join('')}

@@ -246,11 +246,70 @@
     return { lines, total };
   }
 
+  // ---------- Photographic placeholders ----------
+  // loremflickr returns Flickr CC photos matching the supplied keyword set,
+  // pinned by `lock=N` so each user gets the same photo on every load.
+  // picsum.photos is the automatic onerror fallback if loremflickr is down.
+  function flickr(keywords, w, h, lock) {
+    const k = encodeURIComponent(keywords);
+    return `https://loremflickr.com/${w}/${h}/${k}/all?lock=${lock}`;
+  }
+  function picsum(seed, w, h) {
+    return `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`;
+  }
+  // Returns an HTML string for a photographic <img> with double fallback.
+  // Usage: photoImg({ keywords:'sunrise', w:1600, h:900, lock:1, alt:'...' })
+  function photoImg({ keywords, w, h, lock, alt = '', seed }) {
+    const fb = picsum(seed || keywords, w, h);
+    const primary = flickr(keywords, w, h, lock);
+    return `<img src="${primary}" alt="${alt}" loading="lazy"
+      onerror="if(this.dataset.fb!=='1'){this.dataset.fb='1';this.src='${fb}';}else{this.style.display='none';}" />`;
+  }
+
+  // Curated photo catalog — single source of truth so we can re-tune art
+  // direction by editing one map.
+  const PHOTOS = {
+    heroBg:        { keywords: 'sunrise,horizon,nature',           w: 1920, h: 1080, lock: 1001, alt: 'Sunrise over the horizon' },
+    heroVisual:    { keywords: 'sunrise,running,silhouette',       w: 900,  h: 900,  lock: 1002, alt: 'Athlete running into the sunrise' },
+    testimonial:   { keywords: 'man,fitness,athletic,portrait',    w: 600,  h: 750,  lock: 1003, alt: 'Athletic male portrait' },
+    showcaseSun:   { keywords: 'sunrise,golden,sky',               w: 800,  h: 1000, lock: 1101, alt: 'Golden sunrise sky' },
+    showcasePlate: { keywords: 'wholefoods,plate,wholesome',       w: 800,  h: 1000, lock: 1102, alt: 'Whole-food plate' },
+    showcaseBody:  { keywords: 'fitness,athlete,torso',            w: 800,  h: 1000, lock: 1103, alt: 'Aesthetic physique' },
+
+    // Dashboard banners
+    coachBanner:   { keywords: 'sunrise,morning,light',            w: 1600, h: 400,  lock: 2001, alt: 'Morning light' },
+    clientBanner:  { keywords: 'sunrise,horizon,calm',             w: 1600, h: 400,  lock: 2002, alt: 'Calm sunrise' },
+    programBanner: { keywords: 'mountain,sunrise,trail',           w: 1600, h: 400,  lock: 2003, alt: 'Trail at sunrise' },
+
+    // Recipe thumbs (id → photo)
+    'r1': { keywords: 'steak,eggs,plate',           w: 800, h: 600, lock: 3001, alt: 'Steak and eggs' },
+    'r2': { keywords: 'salmon,asparagus,plate',     w: 800, h: 600, lock: 3002, alt: 'Wild salmon plate' },
+    'r3': { keywords: 'liver,onion,plate',          w: 800, h: 600, lock: 3003, alt: 'Liver and onion bowl' },
+    'r4': { keywords: 'bone,broth,soup',            w: 800, h: 600, lock: 3004, alt: 'Bone broth and soup' },
+    'r5': { keywords: 'yogurt,berries,bowl',        w: 800, h: 600, lock: 3005, alt: 'Yogurt and berries' },
+    'r6': { keywords: 'sardines,sourdough,toast',   w: 800, h: 600, lock: 3006, alt: 'Sardines on sourdough' },
+
+    // Article hero images (id → photo)
+    'a1': { keywords: 'sunrise,horizon,morning',    w: 1600, h: 900, lock: 4001, alt: 'Sunrise across a horizon' },
+    'a2': { keywords: 'wholefoods,plate,wholesome', w: 1600, h: 900, lock: 4002, alt: 'A primal whole-food plate' },
+    'a3': { keywords: 'sun,beach,bright,solar',    w: 1600, h: 900, lock: 4003, alt: 'Mid-day sun on skin' },
+    'a4': { keywords: 'water,glass,pour,clean',    w: 1600, h: 900, lock: 4004, alt: 'Glass of clean water' },
+    'a5': { keywords: 'bedroom,bed,calm,night',    w: 1600, h: 900, lock: 4005, alt: 'Calm bedroom at night' },
+    'a6': { keywords: 'lemon,herbs,water,detox',   w: 1600, h: 900, lock: 4006, alt: 'Lemon, herbs, water' },
+  };
+
+  function photoFor(key, overrides = {}) {
+    const cfg = PHOTOS[key];
+    if (!cfg) return '';
+    return photoImg({ ...cfg, ...overrides });
+  }
+
   // ---------- Public API ----------
   window.DialedUI = {
     fmtMoney, fmtDate, fmtTime, fmtDateLong, initials, escapeHtml,
     activateTabs, solarTimes, circadianSchedule,
     buildDetoxProtocol, DETOX_PROTOCOLS,
     FOOD_CATALOG, DEFAULT_SERVINGS, buildGroceryList,
+    photoImg, photoFor, PHOTOS,
   };
 })();
