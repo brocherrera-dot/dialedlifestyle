@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@300;400;500&family=Fira+Code:wght@400&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="assets/styles.css" />
 </head>
-<body>
+<body class="landing">
 
-<header class="nav">
+<header class="nav nav-on-hero">
   <div class="nav-inner">
     <a class="brand" href="index.html">
       <span class="brand-mark"></span>
@@ -33,33 +33,19 @@
   </div>
 </header>
 
-<section class="hero">
+<section class="hero hero-full">
   <div class="hero-bg" aria-hidden="true">
     <img src="/uploads/heroBg"
          onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/1920/1080/sunrise%2Chorizon%2Cnature/all?lock=1001';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/sunrise/1920/1080';} else {this.style.display='none';}"
          alt="" />
   </div>
-  <div class="hero-inner">
-    <div class="stack-24">
-      <span class="mono" style="color:var(--color-amber-glow)">— Coaching, dialed in</span>
-      <h1>Live like the sun was the original biohack.</h1>
-      <p class="lead">Dialed Lifestyle is a 1:1 coaching practice for people who want their hormones, sleep, and energy back — through circadian rhythm, primal whole foods, and a clean environment.</p>
-      <div class="row-wrap">
-        <a class="btn btn-primary" href="#contact">Book a discovery call</a>
-        <a class="btn btn-ghost" href="client.html">View sample client</a>
-      </div>
-      <div class="row" style="gap:32px;margin-top:24px;color:var(--color-faded-stone);font-size:14px">
-        <span>● 12-week minimum</span>
-        <span>● 1:1 with Caden</span>
-        <span>● Lab-backed</span>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <img src="/uploads/heroVisual"
-           onerror="var f=this.dataset.fb||''; if(f===''){this.dataset.fb='1';this.src='https://loremflickr.com/900/900/sunrise%2Crunning%2Csilhouette/all?lock=1002';} else if(f==='1'){this.dataset.fb='2';this.src='https://picsum.photos/seed/runner/900/900';} else {this.style.display='none';}"
-           alt="Athlete moving into the sunrise" />
-      <div class="visual-caption">Sunrise · 06:14 · NYC</div>
-    </div>
+  <div class="hero-content">
+    <h1 class="hero-headline">Live with nature.</h1>
+    <a class="btn btn-primary btn-lg" href="#contact">Book a discovery call →</a>
+  </div>
+  <div class="hero-meta">
+    <span class="mono">Dialed Lifestyle</span>
+    <span class="mono">NYC · 2026</span>
   </div>
 </section>
 

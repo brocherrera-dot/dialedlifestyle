@@ -160,6 +160,23 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border-bottom: 1px solid rgba(255, 241, 224, 0.06);
 }
+
+/* Transparent overlay header — sits ON the hero image, no chrome */
+.nav-on-hero {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: none;
+}
+.nav-on-hero .nav-links a { color: var(--color-dawn-linen); }
+.nav-on-hero .nav-links a:hover { color: var(--color-amber-glow); }
+.nav-on-hero .btn-link { color: var(--color-dawn-linen); }
+.nav-on-hero .brand { color: var(--color-dawn-linen); }
+
+/* Reserve room on landing so the hero starts at the top of the viewport */
+body.landing .hero-full { margin-top: -65px; padding-top: 65px; }
 .nav-inner {
   max-width: 1280px;
   margin: 0 auto;
@@ -351,11 +368,18 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
 }
 
 /* ===== Landing hero ===== */
+/* ===== Hero ===== */
 .hero {
   position: relative;
-  padding: 120px 0 80px;
   overflow: hidden;
   background: var(--color-abyss);
+}
+.hero-full {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-24);
 }
 .hero-bg {
   position: absolute;
@@ -368,16 +392,50 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.55;
-  filter: saturate(1.05) contrast(1.05);
+  opacity: 1;
+  filter: saturate(1.06) contrast(1.04);
 }
+/* Just enough darkening at the top + bottom to keep nav and CTA legible
+   without flattening the photo. The middle stays mostly clean. */
 .hero-bg::after {
   content: '';
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(11, 6, 0, 0.55) 0%, rgba(11, 6, 0, 0.85) 60%, rgba(11, 6, 0, 1) 100%),
-    linear-gradient(135deg, rgba(255, 180, 66, 0.08) 0%, transparent 60%);
+    linear-gradient(180deg, rgba(11, 6, 0, 0.55) 0%, rgba(11, 6, 0, 0) 22%, rgba(11, 6, 0, 0) 70%, rgba(11, 6, 0, 0.65) 100%);
 }
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-32);
+  padding: var(--spacing-72) 0;
+}
+.hero-headline {
+  font-family: var(--font-pp-neue-montreal);
+  font-weight: var(--font-weight-medium);
+  font-size: clamp(56px, 11vw, 144px);
+  line-height: 0.9;
+  letter-spacing: -0.018em;
+  color: var(--color-dawn-linen);
+  text-shadow: 0 2px 40px rgba(11, 6, 0, 0.45);
+  margin: 0;
+}
+.hero-meta {
+  position: absolute;
+  z-index: 1;
+  inset: auto var(--spacing-32) var(--spacing-24) var(--spacing-32);
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.hero-meta .mono { color: var(--color-dawn-linen); opacity: 0.72; }
+
+/* Older two-column hero markup is no longer used on the landing — these
+   rules are kept only for callers that still mount .hero-inner / .hero-visual
+   inside an embedded section (e.g. dashboards). */
 .hero-inner {
   position: relative;
   z-index: 1;
@@ -385,58 +443,28 @@ h4 { font-size: var(--text-subheading); line-height: var(--leading-subheading); 
   margin: 0 auto;
   padding: 0 var(--spacing-24);
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: var(--spacing-72);
+  grid-template-columns: 1fr;
+  gap: var(--spacing-32);
   align-items: center;
-}
-.hero h1 {
-  font-size: clamp(48px, 8vw, 81px);
-  line-height: 0.85;
-  letter-spacing: -0.014em;
 }
 .hero p.lead {
   font-size: var(--text-subheading);
   line-height: 1.4;
-  letter-spacing: -0.002em;
   color: var(--color-dawn-linen);
   opacity: 0.78;
   max-width: 540px;
 }
-.hero-visual {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--radius-cards);
-  background: var(--color-dark-charcoal);
-  border: 1px solid rgba(255, 241, 224, 0.08);
-  position: relative;
-  overflow: hidden;
+.hero-visual { display: none; }
+
+/* Larger, weightier primary button for the hero CTA */
+.btn-lg {
+  padding: var(--spacing-13) var(--spacing-28);
+  font-size: var(--text-body);
+  letter-spacing: -0.005em;
 }
-.hero-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.hero-visual::after {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(315deg, rgba(255, 180, 66, 0) 0%, rgba(255, 180, 66, 0.18) 49%, rgba(255, 241, 224, 0.10) 100%),
-    linear-gradient(180deg, transparent 60%, rgba(11, 6, 0, 0.55));
-  pointer-events: none;
-}
-.hero-visual .visual-caption {
-  position: absolute;
-  inset: auto 16px 16px 16px;
-  color: var(--color-dawn-linen);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  opacity: 0.85;
-}
-@media (max-width: 960px) {
-  .hero-inner { grid-template-columns: 1fr; gap: var(--spacing-32); }
-  .hero { padding: 64px 0 48px; }
+
+@media (max-width: 600px) {
+  .hero-meta { inset: auto var(--spacing-16) var(--spacing-16) var(--spacing-16); flex-direction: column; gap: 4px; }
 }
 
 /* ===== Section ===== */
