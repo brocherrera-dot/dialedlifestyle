@@ -65,6 +65,14 @@ let state = window.DialedData.loadData();
 
 function persist() { window.DialedData.saveData(state); }
 
+// On a real server boot() hydrates from /api/state and re-renders. On file://
+// or static hosts the promise resolves to cached/seed data — re-render is
+// effectively a no-op but harmless.
+window.DialedData.boot().then(d => {
+  state = d;
+  setRoute(location.hash.replace('#','') || 'overview');
+});
+
 // ---------- Router ----------
 const routes = {
   overview: renderOverview,
@@ -88,9 +96,9 @@ function setRoute(name) {
 $$('.sidebar a').forEach(a => {
   a.addEventListener('click', (e) => { e.preventDefault(); setRoute(a.dataset.route); });
 });
-$('#reset-data').addEventListener('click', () => {
+$('#reset-data').addEventListener('click', async () => {
   if (confirm('Reset all demo data to defaults?')) {
-    state = window.DialedData.resetData();
+    state = await window.DialedData.resetData();
     setRoute(location.hash.replace('#','') || 'overview');
   }
 });

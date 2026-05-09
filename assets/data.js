@@ -177,24 +177,92 @@ const DEFAULT_DATA = {
 
 const STORAGE_KEY = 'dialed-lifestyle-data-v1';
 
-function loadData() {
+// Cache the most recently loaded state so synchronous callers (the existing
+// route renderers) can keep doing `state = DialedData.loadData()`.
+let cache = null;
+let mode = 'localStorage'; // or 'api' once boot() succeeds against the server.
+
+function readLocal() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch (e) { /* fall through */ }
-  saveData(DEFAULT_DATA);
-  return DEFAULT_DATA;
+  } catch { /* ignore */ }
+  return null;
 }
+function writeLocal(d) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch { /* ignore */ }
+}
+
+// Detects whether we're being served from a real HTTP origin (so /api/* will
+// resolve) vs. a file:// or static-only host (where the API is unreachable).
+function apiAvailable() {
+  return typeof location !== 'undefined' &&
+    (location.protocol === 'http:' || location.protocol === 'https:');
+}
+
+async function boot() {
+  if (apiAvailable()) {
+    try {
+      const res = await fetch('/api/state', { headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        const d = await res.json();
+        if (d && d.clients) {
+          cache = d;
+          mode = 'api';
+          writeLocal(d); // mirror so reloads without server still work
+          return d;
+        }
+      }
+    } catch { /* network error — fall back below */ }
+  }
+  cache = readLocal() || JSON.parse(JSON.stringify(DEFAULT_DATA));
+  writeLocal(cache);
+  mode = 'localStorage';
+  return cache;
+}
+
+function loadData() {
+  if (cache) return cache;
+  cache = readLocal() || JSON.parse(JSON.stringify(DEFAULT_DATA));
+  return cache;
+}
+
 function saveData(d) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); } catch (e) { /* ignore */ }
+  cache = d;
+  writeLocal(d);
+  if (mode === 'api') {
+    // Fire-and-forget; we already wrote to localStorage so the user-visible
+    // state survives even if the request fails.
+    fetch('/api/state', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(d),
+    }).catch(() => { /* ignore */ });
+  }
 }
-function resetData() {
+
+async function resetData() {
+  if (mode === 'api') {
+    try {
+      const res = await fetch('/api/state/reset', { method: 'POST' });
+      if (res.ok) {
+        const d = await res.json();
+        cache = d; writeLocal(d);
+        return d;
+      }
+    } catch { /* fall through */ }
+  }
   localStorage.removeItem(STORAGE_KEY);
-  return loadData();
+  cache = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  writeLocal(cache);
+  return cache;
 }
+
 function getClient(id) {
   const d = loadData();
   return d.clients.find(c => c.id === id);
 }
 
-window.DialedData = { loadData, saveData, resetData, getClient, DEFAULT_DATA };
+function getMode() { return mode; }
+
+window.DialedData = { boot, loadData, saveData, resetData, getClient, getMode, DEFAULT_DATA };

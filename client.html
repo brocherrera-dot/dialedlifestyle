@@ -60,8 +60,17 @@ const { fmtMoney, fmtDate, fmtTime, fmtDateLong, initials, escapeHtml,
 
 let state = window.DialedData.loadData();
 function persist() { window.DialedData.saveData(state); }
-const me = state.clients.find(c => c.id === 'broc');
+let me = state.clients.find(c => c.id === 'broc') || state.clients[0];
 $('#me-avatar').textContent = initials(me.name);
+
+// Re-hydrate from /api/state on boot. me is `let` so render closures pick up
+// the new reference automatically on the next setRoute() call.
+window.DialedData.boot().then(d => {
+  state = d;
+  me = state.clients.find(c => c.id === 'broc') || state.clients[0];
+  $('#me-avatar').textContent = initials(me.name);
+  setRoute(location.hash.replace('#','') || 'home');
+});
 
 const routes = {
   home: renderHome,
